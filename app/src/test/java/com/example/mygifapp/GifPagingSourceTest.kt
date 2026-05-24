@@ -39,7 +39,7 @@ class GifPagingSourceTest {
     @Before
     fun setUp() {
         // Mocking the static function that checks for an internet connection
-        mockkStatic("com.example.myapplication.utils.NetworkUtilsKt")
+        mockkStatic("com.example.mygifapp.utils.NetworkUtilsKt")
 
         // By default, our tests assume that an internet connection IS available
         every { isInternetAvailable(any()) } returns true
@@ -51,7 +51,7 @@ class GifPagingSourceTest {
     @After
     fun tearDown() {
         // Clearing the static mocks after each test
-        unmockkStatic("com.example.myapplication.utils.NetworkUtilsKt")
+        unmockkStatic("com.example.mygifapp.utils.NetworkUtilsKt")
     }
 
     @Test
@@ -97,8 +97,66 @@ class GifPagingSourceTest {
     }
 
     @Test
+    fun `load returns correct nextKey when loading subsequent pages`() = runTest {
+        // Arrange: simulating a successful response for the second page (offset = 10)
+        val fakeGiphyResponse = GiphyResponse(
+            data = listOf(
+                GifDto(
+                    id = "456",
+                    images = ImagesDto(
+                        original = OriginalDto(url = "https://original.gif"),
+                        fixed_width = FixedWidth(url = "https://preview.gif")
+                    )
+                )
+            )
+        )
+        coEvery { mockApi.searchGifs(apiKey, query, limit = 10, offset = 10) } returns fakeGiphyResponse
+
+        // Requesting the next page of data (Append), passing the current offset of 10
+        val params = PagingSource.LoadParams.Append(
+            key = 10,
+            loadSize = 10,
+            placeholdersEnabled = false
+        )
+
+        // Act: Running the `load` method
+        val result = pagingSource.load(params)
+
+        // Assert: Checking that the result is successful
+        assertTrue(result is PagingSource.LoadResult.Page)
+        val page = result as PagingSource.LoadResult.Page<Int, GifItem>
+
+        // Checking the pagination key offset forward
+        assertEquals(0, page.prevKey)
+        assertEquals(20, page.nextKey) // 10 + 10 = 20
+    }
+
+    @Test
+    fun `load returns nextKey as null when end of pagination reached`() = runTest {
+        // Arrange: The server returned an empty list (there are no more GIFs for this query)
+        val fakeGiphyResponse = GiphyResponse(data = emptyList())
+        coEvery { mockApi.searchGifs(apiKey, query, limit = 10, offset = 0) } returns fakeGiphyResponse
+
+        val params = PagingSource.LoadParams.Refresh<Int>(
+            key = null,
+            loadSize = 10,
+            placeholdersEnabled = false
+        )
+
+        // Act: Running the `load` method
+        val result = pagingSource.load(params)
+
+        // Assert: Checking that the result is successful
+        assertTrue(result is PagingSource.LoadResult.Page)
+        val page = result as PagingSource.LoadResult.Page<Int, GifItem>
+
+        // No more pages. The paginator stops
+        assertEquals(null, page.nextKey)
+    }
+
+    @Test
     fun `load returns LoadResult Error when internet is not available`() = runTest {
-        // Arrange: Настраиваем утилиту так, будто интернета НЕТ
+        // Arrange: Configuring the utility with no internet connection
         every { isInternetAvailable(any()) } returns false
 
         val params = PagingSource.LoadParams.Refresh<Int>(
