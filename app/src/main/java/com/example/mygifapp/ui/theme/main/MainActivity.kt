@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             flow
-                .debounce(100)
+                .debounce(500)
                 .map { it.trim() }
                 .filter { it.length >= 2 }
                 .distinctUntilChanged()
