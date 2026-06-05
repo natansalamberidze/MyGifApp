@@ -1,14 +1,18 @@
 # Gif App
 
-A native Android application written in Kotlin using XML Layouts (View System) to search and browse GIF animations.
+A native Android application written in Kotlin using Jetpack Compose to search and browse GIF animations using the Giphy API.
 
-## Tech Stack & Architecture
-* **UI Framework:** XML Layouts, AppCompat
-* **Asynchronous Programming:** Kotlin Coroutines, Kotlin Flow (CallbackFlow, StateFlow)
-* **Networking:** Retrofit 2, Gson
+## Tech Stack
+
+* **Language:** Kotlin
+* **Architecture:** MVVM (Domain, Data, and UI layers split)
+* **UI Framework:** Jetpack Compose (Material 3)
+* **Dependency Injection:** Dagger Hilt
+* **Networking:** Retrofit 2 + Gson
+* **Asynchronous Programming:** Kotlin Coroutines & Flow
 * **Pagination:** Jetpack Paging 3
-* **Image/GIF Loading:** Glide
-* **Testing:** MockK, JUnit
+* **Image Loading:** Glide Compose
+* **Testing:** JUnit 4 + MockK + Turbine
 
 ---
 
