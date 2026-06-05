@@ -1,5 +1,7 @@
 package com.example.mygifapp.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class GiphyResponse(
     val data: List<GifDto>
 )
@@ -11,7 +13,8 @@ data class GifDto(
 
 data class ImagesDto(
     val original: OriginalDto,
-    val fixed_width: FixedWidth
+    @SerializedName("fixed_width")
+    val fixedWidth: FixedWidth
 )
 
 data class OriginalDto(
