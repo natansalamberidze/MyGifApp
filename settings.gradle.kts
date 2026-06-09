@@ -24,3 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "mygifapp"
 include(":app")
+include(":core-network")
+include(":feature-gif-search")

@@ -19,12 +19,3 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--keepattributes Signature, InnerClasses, EnclosingMethod
-# --- Models ---
--keep class com.example.network.model.** { *; }
-
--keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
--keep,allowobfuscation,allowshrinking class retrofit2.Response
-
--if interface * { @retrofit2.http.* public *** *(...); }
--keep,allowoptimization,allowshrinking,allowobfuscation class <3>

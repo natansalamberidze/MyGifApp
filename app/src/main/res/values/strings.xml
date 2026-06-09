@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">My Application</string>
-    <string name="search_gifs_hint">Search GIFs</string>
-    <string name="error_message_hint">Loading error. Click to try again</string>
-    <string name="retry_message_hint">Please Retry!</string>
-</resources>
